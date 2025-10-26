@@ -7,10 +7,10 @@ public class Node <T>{
     Node<T> prev;
     final Lock lock = new ReentrantLock();
 
-    public Node(Node<T> prev) {
-        this.value = null;
+    public Node(T value) {
+        this.value = value;
         this.next = null;
-        this.prev = prev;
+        this.prev = null;
     }
 
     @Override

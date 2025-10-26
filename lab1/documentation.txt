@@ -1,0 +1,11 @@
+The mutex locks each bankAccount separately. This is made to be sure that the balance of each account is protected.
+
+The solution for avoidinf deadlocks is to always acquire the locks in the same order. In this case, we can use the account ID to determine the or
+This protocol breaks the circular wait condition required for a deadlock to occur, ensuring that one of the threads will always succeed in acquiring both locks.
+der of locking.
+
+Invariants:
+The global amount of money across all accounts should remain constant before and after transfers.
+    - This is realized by the pair of locks aquired during a transaction which protects both accounts involved in the transfer so the final sum will be the same.
+The balance of any single account must accurately reflect the sum of all operations performed on it
+    - The individual lock on each BankAccount ensures this.

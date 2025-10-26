@@ -22,8 +22,8 @@ public class ConcurrentDoublyLinkedList<T> {
             throw new IllegalArgumentException("Cannot insert after tail");
         }
 
-        Node<T> newNode = new Node<>(node);
-        newNode.value = value;
+        Node<T> newNode = new Node<>(value);
+
         node.lock.lock();
         try {
             Node<T> nextNode = node.next;
@@ -47,12 +47,15 @@ public class ConcurrentDoublyLinkedList<T> {
             throw new IllegalArgumentException("Cannot insert before head");
         }
 
-        Node<T> newNode = new Node<>(node.prev);
-        newNode.value = value;
-        node.lock.lock();
+        Node<T> newNode = new Node<>(value);
+
+        Node<T> prevNode = node.prev;
+
+        prevNode.lock.lock();
         try {
-            Node<T> prevNode = node.prev;
-            prevNode.lock.lock();
+            node.lock.lock();
+            if (node.prev != prevNode)
+                throw new RuntimeException();
             try {
                 newNode.next = node;
                 newNode.prev = prevNode;
@@ -61,7 +64,14 @@ public class ConcurrentDoublyLinkedList<T> {
             } finally {
                 prevNode.lock.unlock();
             }
-        } finally {
+        }
+        catch (RuntimeException e) {
+            node.lock.unlock();
+            prevNode.lock.unlock();
+            insertBefore(node, value);
+        }
+
+        finally {
             node.lock.unlock();
         }
         return newNode;

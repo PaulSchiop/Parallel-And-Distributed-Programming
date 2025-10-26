@@ -2,8 +2,8 @@ import model.*;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        int numAccounts = 100;
-        int numThreads = 90;
+        int numAccounts = 10000;
+        int numThreads = 9000;
         int initialBalance = 1000;
 
         Bank[] accounts = new Bank[numAccounts];
@@ -11,11 +11,16 @@ public class Main {
             accounts[i] = new Bank(initialBalance);
         }
 
+
         int totalInitialBalance = 0;
         for (Bank account : accounts) {
             totalInitialBalance += account.getBalance();
         }
         System.out.println("Total initial balance: " + totalInitialBalance);
+
+
+        ConsistencyChecker checker = new ConsistencyChecker(accounts, totalInitialBalance);
+        Thread checkerThread = new Thread(checker);
 
         Thread[] threads = new Thread[numThreads];
         for (int i = 0; i < numThreads; i++) {
@@ -24,6 +29,8 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
 
+        checkerThread.start();
+
         for (int i = 0; i < numThreads; i++) {
             threads[i].start();
         }
@@ -31,6 +38,9 @@ public class Main {
         for (int i = 0; i < numThreads; i++) {
             threads[i].join();
         }
+
+        checker.stop();
+        checkerThread.join();
 
         long endTime = System.currentTimeMillis();
 
