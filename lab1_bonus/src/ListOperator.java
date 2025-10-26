@@ -28,21 +28,21 @@ public class ListOperator implements Runnable {
 
             try {
                 switch (operation) {
-                    case 0: // insert-after
+                    case 0: // insertAfter
                         newNode = list.insertAfter(targetNode, opCounter.getAndIncrement());
                         break;
-                    case 1: // insert-before
+                    case 1: // insertBefore
                         newNode = list.insertBefore(targetNode, opCounter.getAndIncrement());
                         break;
-                    case 2: // move-next
+                    case 2: // moveNext
                         Node<Integer> next = list.moveNext(targetNode);
-                        if (next.value != null) { // Don't add the tail sentinel
+                        if (next.value != null) {
                             knownNodes.add(next);
                         }
                         break;
-                    case 3: // move-prev
+                    case 3: // movePrev
                         Node<Integer> prev = list.movePrev(targetNode);
-                        if (prev.value != null) { // Don't add the head sentinel
+                        if (prev.value != null) {
                             knownNodes.add(prev);
                         }
                         break;

@@ -17,7 +17,7 @@ public class TransferOperation implements Runnable {
         for (int i = 0; i < 1000; i++) {
             int fromAccountIndex = random.nextInt(numAccounts);
             int toAccountIndex = random.nextInt(numAccounts);
-            int amount = random.nextInt();
+            int amount = random.nextInt(100);
 
             if (fromAccountIndex != toAccountIndex) {
                 Bank fromAccount = accounts[fromAccountIndex];
